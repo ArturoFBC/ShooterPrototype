@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "TPSCharacter.generated.h"
 
+class AGun;
+
 UCLASS()
 class FPS_PROTOTYPE_API ATPSCharacter : public ACharacter
 {
@@ -32,8 +34,16 @@ private:
 	void LookUpRate(float AxisValue);
 	void LookRightRate(float AxisValue);
 
+	void Shoot();
+
 	UPROPERTY(EditAnywhere)
 	float PitchRate = 70.f;
 	UPROPERTY(EditAnywhere)
 	float YawRate = 70.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
 };

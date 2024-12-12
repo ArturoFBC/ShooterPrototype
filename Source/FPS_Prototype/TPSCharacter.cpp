@@ -2,6 +2,7 @@
 
 
 #include "TPSCharacter.h"
+#include "Gun.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -16,6 +17,10 @@ void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
 }
 
 // Called every frame
@@ -38,6 +43,8 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis(TEXT("LookUpRate"), this, &ATPSCharacter::LookUpRate);
 	PlayerInputComponent->BindAxis(TEXT("LookRightRate"), this, &ATPSCharacter::LookRightRate);
+
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed,this, &ATPSCharacter::Shoot);
 }
 
 void ATPSCharacter::MoveForward(float AxisValue)
@@ -58,4 +65,9 @@ void ATPSCharacter::LookUpRate(float AxisValue)
 void ATPSCharacter::LookRightRate(float AxisValue)
 {
 	AddControllerYawInput(AxisValue * YawRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ATPSCharacter::Shoot()
+{
+	Gun->PullTrigger();
 }
