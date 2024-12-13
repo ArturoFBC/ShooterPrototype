@@ -25,7 +25,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
@@ -37,5 +36,11 @@ private:
 	UParticleSystem* MuzzleFlash;
 
 	UPROPERTY(EditAnywhere)
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere)
 	float MaxRange = 1000.f;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 10.f;
 };

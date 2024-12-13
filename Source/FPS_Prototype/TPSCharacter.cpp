@@ -17,6 +17,8 @@ void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Health = MaxHealth;
+
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
@@ -45,6 +47,19 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis(TEXT("LookRightRate"), this, &ATPSCharacter::LookRightRate);
 
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed,this, &ATPSCharacter::Shoot);
+}
+
+float ATPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
+{
+    float DamageToApply= Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	Health -= DamageToApply;
+	if (Health < 0)
+		Health = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), Health);
+
+	return DamageToApply;
 }
 
 void ATPSCharacter::MoveForward(float AxisValue)
