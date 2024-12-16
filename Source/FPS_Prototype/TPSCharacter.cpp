@@ -25,6 +25,11 @@ void ATPSCharacter::BeginPlay()
 	Gun->SetOwner(this);
 }
 
+bool ATPSCharacter::IsDead() const
+{
+    return Health <= 0;
+}
+
 // Called every frame
 void ATPSCharacter::Tick(float DeltaTime)
 {
