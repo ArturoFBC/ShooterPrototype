@@ -3,6 +3,7 @@
 
 #include "TPSAIController.h"
 #include "Kismet/GameplayStatics.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 void ATPSAIController::BeginPlay()
 {
@@ -10,5 +11,29 @@ void ATPSAIController::BeginPlay()
 
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
-    SetFocus(PlayerPawn);
+    if (AIBehavior != nullptr)
+    {
+        RunBehaviorTree(AIBehavior);
+
+        GetBlackboardComponent()->SetValueAsVector(TEXT("StartLocation"), GetPawn()->GetActorLocation());
+    }
+    
+}
+
+void ATPSAIController::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+    if (PlayerPawn && LineOfSightTo(PlayerPawn))
+    {
+        GetBlackboardComponent()->SetValueAsVector(TEXT("PlayerLocation"), PlayerPawn->GetActorLocation());
+        GetBlackboardComponent()->SetValueAsVector(TEXT("LastKnownPlayerLocation"), PlayerPawn->GetActorLocation());
+    }
+    else
+    {
+        GetBlackboardComponent()->ClearValue(TEXT("PlayerLocation"));
+    }
+    
 }
