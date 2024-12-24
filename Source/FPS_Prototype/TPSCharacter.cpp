@@ -3,6 +3,8 @@
 
 #include "TPSCharacter.h"
 #include "Gun.h"
+#include "TPSGameModeBase.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -63,6 +65,14 @@ float ATPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEv
 		Health = 0;
 
 	UE_LOG(LogTemp, Warning, TEXT("%f"), Health);
+	if (IsDead())
+	{
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ATPSGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ATPSGameModeBase>();
+		if (GameMode != nullptr)
+			GameMode->PawnKilled(this);
+	}
 
 	return DamageToApply;
 }
