@@ -67,11 +67,13 @@ float ATPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEv
 	UE_LOG(LogTemp, Warning, TEXT("%f"), Health);
 	if (IsDead())
 	{
-		DetachFromControllerPendingDestroy();
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ATPSGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ATPSGameModeBase>();
 		if (GameMode != nullptr)
 			GameMode->PawnKilled(this);
+
+		DetachFromControllerPendingDestroy();
+
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	return DamageToApply;
