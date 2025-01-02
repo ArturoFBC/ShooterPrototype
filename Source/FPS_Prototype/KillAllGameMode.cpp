@@ -2,15 +2,36 @@
 
 
 #include "KillAllGameMode.h"
+#include "TPSAIController.h"
+#include "EngineUtils.h"
 
 void AKillAllGameMode::PawnKilled(APawn *PawnKilled)
 {
     Super::PawnKilled(PawnKilled);
-    UE_LOG(LogTemp, Warning, TEXT("%hs"), "BBBB");
+
     APlayerController* PlayerController = Cast<APlayerController>(PawnKilled->GetController());
     if (PlayerController != nullptr)
     {
-        UE_LOG(LogTemp, Warning, TEXT("%hs"), "CCCC");
-        PlayerController->GameHasEnded(nullptr, false);
+        EndGame(false);
+    }
+
+    for (ATPSAIController* Controller : TActorRange<ATPSAIController>(GetWorld()))
+    {
+        if (Controller->IsDead() == false)
+        {
+            return;
+        }
+    }
+
+    EndGame(true);
+}
+
+void AKillAllGameMode::EndGame(bool bIsplayerWinner)
+{
+    for (AController* Controller : TActorRange<AController>(GetWorld()))
+    {
+        bool ThisWon = Controller->IsPlayerController() == bIsplayerWinner;
+
+        Controller->GameHasEnded(Controller->GetPawn(), ThisWon);
     }
 }

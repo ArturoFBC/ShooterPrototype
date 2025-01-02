@@ -3,6 +3,7 @@
 
 #include "TPSAIController.h"
 #include "Kismet/GameplayStatics.h"
+#include "TPSCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 void ATPSAIController::BeginPlay()
@@ -23,4 +24,15 @@ void ATPSAIController::BeginPlay()
 void ATPSAIController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+bool ATPSAIController::IsDead() const
+{
+    ATPSCharacter* ThisCharacter = Cast<ATPSCharacter>(GetPawn());
+    if (ThisCharacter != nullptr)
+    {
+        return ThisCharacter->IsDead();
+    }
+
+    return true;
 }

@@ -9,11 +9,19 @@ void ATPSPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner)
 {
     Super::GameHasEnded(EndGameFocus, bIsWinner);
 
-    UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
-
-    if (LoseScreen != nullptr)
+    UUserWidget* EndGameScreen;
+    if (bIsWinner)
     {
-        LoseScreen->AddToViewport();
+        EndGameScreen = CreateWidget(this, WinScreenClass);
+    }
+    else
+    {
+        EndGameScreen = CreateWidget(this, LoseScreenClass);
+    }
+
+    if (EndGameScreen != nullptr)
+    {
+        EndGameScreen->AddToViewport();
     }
 
     GetWorldTimerManager().SetTimer(RestartTimer, this, &APlayerController::RestartLevel, RestartDelay);

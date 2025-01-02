@@ -16,4 +16,7 @@ class FPS_PROTOTYPE_API AKillAllGameMode : public ATPSGameModeBase
 
 public:
 	void PawnKilled(APawn* PawnKilled) override;
+
+private:
+	void EndGame(bool bIsplayerWinner);
 };
