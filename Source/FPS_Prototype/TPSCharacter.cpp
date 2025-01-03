@@ -103,3 +103,8 @@ void ATPSCharacter::Shoot()
 {
 	Gun->PullTrigger();
 }
+
+float ATPSCharacter::GetHealthPercent() const
+{
+	return Health / MaxHealth;
+}
